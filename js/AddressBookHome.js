@@ -1,3 +1,4 @@
+let contactList
 window.addEventListener("DOMContentLoaded", (event) => {
   contactList = getContactFromStorage()
   document.querySelector(".contact-count").textContent = contactList.length;
@@ -53,3 +54,12 @@ function remove(node) {
     document.querySelector(".contact-count").textContent = contactList.length
     createInnerHtml();
 }
+
+function update(node) {
+    let contactEdit = contactList.find(editContact => editContact._id == node.id)
+    if (!contactEdit) {
+        return
+    }
+    localStorage.setItem('contactEdit',JSON.stringify(contactEdit))
+    window.location.replace("../pages/AddressBookFrom.html")
+  }

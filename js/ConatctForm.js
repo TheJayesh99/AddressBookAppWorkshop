@@ -1,3 +1,4 @@
+let isUpdate = false
 window.addEventListener("DOMContentLoaded", (event) => {
   //validate first name
   const name = document.querySelector("#name");
@@ -46,6 +47,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
       zipError.textContent = error;
     }
   });
+  checkForUpdate();
+  localStorage.removeItem('contactEdit')
 });
 
 function save() {
@@ -125,4 +128,23 @@ function resetForm() {
 function setValue(id, value) {
 const element = document.querySelector(id);
 element.value = value;
+}
+
+function checkForUpdate(){
+  const contactJson = localStorage.getItem('contactEdit')
+  isUpdate = contactJson ? true : false;
+  if(!isUpdate){
+    return
+  }
+  contactObj = JSON.parse(contactJson)
+  setForm()
+}
+
+function setForm() {
+  setValue("#name",contactObj._name)
+  setValue("#phoneNumber", contactObj._phoneNumber);
+  setValue("#address", contactObj._address);
+  setValue("#city", contactObj._city);
+  setValue("#state", contactObj._state);
+  setValue("#zip", contactObj._zip);
 }
