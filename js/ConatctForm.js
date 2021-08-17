@@ -85,7 +85,7 @@ function save() {
     throw error;
   }
 
-  alert(contact.toString());
+  console.log(contact.toString());
 }
 
 function getInputValueById(property) {
