@@ -145,3 +145,10 @@ select {
   opacity: 1;
   width: 80%;
 }
+
+error-output {
+  margin-left: 10px;
+  font-size: 14px;
+  font-style: italic;
+  color: red;
+}
