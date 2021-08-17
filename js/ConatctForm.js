@@ -121,3 +121,8 @@ function resetForm() {
     setValue("#state", "Select State");
     setValue("#zip", "");
   }
+
+function setValue(id, value) {
+const element = document.querySelector(id);
+element.value = value;
+}
