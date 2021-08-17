@@ -1,0 +1,22 @@
+{
+    "ContactDB": [
+        {
+            "id": 1,
+            "_name": "Omkar",
+            "_phoneNumber": "90 9874563210",
+            "_address": "mumbai",
+            "_city": "Chennai",
+            "_state": "Dadar and Nagar Haveli",
+            "_zip": "410201"
+        },
+        {
+            "id": 2,
+            "_name": "Jayesh",
+            "_phoneNumber": "91 9234567890",
+            "_address": "thane",
+            "_city": "Chennai",
+            "_state": "Bihar",
+            "_zip": "410141"
+        }
+    ]
+}
