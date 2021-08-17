@@ -1,4 +1,5 @@
 let isUpdate = false
+let contactObj = {}
 window.addEventListener("DOMContentLoaded", (event) => {
   //validate first name
   const name = document.querySelector("#name");
@@ -53,27 +54,45 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 function save() {
   try {
-    let contact = createContact();
-    craeteAndUpdateStorage(contact)
+    setContactObject()
+    createAndUpdateStorage()
+    resetForm()
+    window.location.replace("../pages/AddressBookHome.html")
   } catch (error) {
     alert(error);
   }
 }
 
-function craeteAndUpdateStorage(contact) {
+function createAndUpdateStorage() {
   let contactList = JSON.parse(localStorage.getItem("ContactList"))
   if (contactList != undefined) {
-    contactList.push(contact)
+    let contactData = contactList.find(empData => empData._id == contactObj._id)
+    if(!contactData){
+      contactList.push(createContact())
+    }else{
+      const index = contactList.map(empData => empData._id).indexOf(contactData._id)
+      contactList.splice(index,1,createContact(contactData._id))
+    }
   } else {
-    contactList = [contact]
+    contactList = [createContact()]
   }
-  alert("Contact Added Sucessfully")
   localStorage.setItem("ContactList",JSON.stringify(contactList))
 }
 
-function createContact() {
-  let contact = new Contact();
-  contact.id = new Date().getTime();
+function createContact(id) {
+  let contact = new Contact()
+    if (!id) {
+      contact._id = generateId()
+    }
+    else{
+      contact._id = id
+    }
+    setContactData(contact)
+    return contact
+}
+
+
+function setContactData(contact) {
   try {
     contact.name = getInputValueById("#name");
   } catch (error) {
@@ -147,4 +166,36 @@ function setForm() {
   setValue("#city", contactObj._city);
   setValue("#state", contactObj._state);
   setValue("#zip", contactObj._zip);
+}
+
+function generateId() {
+  let empId = localStorage.getItem("ContactID")
+  empId = !empId ? 1 : (parseInt(empId)+1).toString()
+  localStorage.setItem("ContactID",empId)
+  return empId
+}
+
+function setContactObject() {
+  try {
+    contactObj._name = getInputValueById("#name");
+  } catch (error) {
+    setTextValue(".name-error", error);
+    throw error;
+  }
+
+  try {
+    contactObj._phoneNumber = getInputValueById("#phoneNumber");
+  } catch (error) {
+    setTextValue(".tel-error", error);
+    throw error
+  }
+  contactObj._address = getInputValueById("#address");
+  contactObj._city = getInputValueById("#city");
+  contactObj._state = getInputValueById("#state");
+  try {
+    contactObj._zip = getInputValueById("#zip");
+  } catch (error) {
+    setTextValue(".zip-error", error);
+    throw error
+  }
 }
