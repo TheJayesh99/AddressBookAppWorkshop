@@ -7,11 +7,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
       nameError.textContent = "";
       return;
     }
-    let nameRegex = RegExp("^[A-Z]{1}[a-zA-Z ]{2,}$");
-    if (nameRegex.test(name.value)) {
+    try {
+      new Contact().name = name.value;
       nameError.textContent = "";
-    } else {
-      nameError.textContent = "Invalid name";
+    } catch (error) {
+      nameError.textContent = error;
     }
   });
 
@@ -19,11 +19,15 @@ window.addEventListener("DOMContentLoaded", (event) => {
   const phoneNumber = document.querySelector("#phoneNumber");
   const numberError = document.querySelector(".tel-error");
   phoneNumber.addEventListener("input", function () {
-    let phoneNumberRegex = RegExp("^[1-9]{2}[ ][9]{1}[0-9]{9}$");
-    if (phoneNumberRegex.test(phoneNumber.value)) {
-        numberError.textContent = ""
-    } else {
-      numberError.textContent = "Phone number is incorrect";
+    if (phoneNumber.value.length == 0) {
+      numberError.textContent = "";
+      return;
+    }
+    try {
+      new Contact().phoneNumber = phoneNumber.value;
+      numberError.textContent = "";
+    } catch (error) {
+      numberError.textContent = error;
     }
   });
 
@@ -31,11 +35,60 @@ window.addEventListener("DOMContentLoaded", (event) => {
   const zip = document.querySelector("#zip");
   const zipError = document.querySelector(".zip-error");
   zip.addEventListener("input", function () {
-    let zipRegex = RegExp("^[0-9]{3}[ ]?[0-9]{3}$");
-    if (zipRegex.test(zip.value)) {
-        zipError.textContent = "";
-      } else {
-        zipError.textContent = "Invalid zipcode";
-      }
+    if (zip.value.length == 0) {
+      zipError.textContent = "";
+      return;
+    }
+    try {
+      new Contact().zip = zip.value;
+      zipError.textContent = "";
+    } catch (error) {
+      zipError.textContent = error;
+    }
   });
 });
+
+function save() {
+    let contact = new Contact()
+    contact.id = new Date().getTime()
+  try {
+    contact.name = getInputValueById("#name");
+  } catch (error) {
+    setTextValue(".name-error", error);
+    throw error;
+  }
+
+  try {
+    contact.phoneNumber = getInputValueById("#phoneNumber");
+  } catch (error) {
+    setTextValue(".tel-error", error);
+    throw error;
+  }
+  contact.address = getInputValueById("#address");
+  let city = getInputValueById("#city");
+  if (city != "Select City") {
+    contact.city = city;
+  } else {
+    throw "Please select city";
+  }
+  let state = getInputValueById("#state");
+  if (state != "Select State") {
+    contact.state = state;
+  } else {
+    throw "Please select state";
+  }
+
+  try {
+    contact.zip = getInputValueById("#zip");
+  } catch (error) {
+    setTextValue(".zip-error", error);
+    throw error;
+  }
+
+  alert(contact.toString());
+}
+
+function getInputValueById(property) {
+    let value = document.querySelector(property).value;
+    return value;   
+}
