@@ -1,13 +1,41 @@
 let contactList
 window.addEventListener("DOMContentLoaded", (event) => {
-  contactList = getContactFromStorage()
-  document.querySelector(".contact-count").textContent = contactList.length;
-  createInnerHtml();
+  if (site_properties.use_local_storage.match("true")) {
+    getContactFromStorage()
+  } else {
+    getContactDataFromServer() 
+  }
 });
 
 const getContactFromStorage = () =>{
-    return localStorage.getItem('ContactList') ? 
-    JSON.parse(localStorage.getItem('ContactList')) : []
+  contactList = localStorage.getItem('ContactList') ? 
+  JSON.parse(localStorage.getItem('ContactList')) : []
+  procesContactCount()
+  createInnerHtml()
+}
+
+function procesContactCount() {
+  document.querySelector(".contact-count").textContent = contactList.length;
+}
+
+function getContactDataFromServer() {
+  makePromiseCall("GET", site_properties.server_url, true)
+    .then(
+      (responseText) =>{
+        contactList = JSON.parse(responseText)
+        procesContactCount()
+        createInnerHtml();
+      }
+    )
+    .catch(
+      (error) =>
+        {
+            console.log("Error status"+JSON.stringify(error));
+            contactList = []
+            processContactCount()
+        }
+    );
+
 }
 
 const createInnerHtml = () => {
