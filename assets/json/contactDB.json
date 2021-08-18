@@ -26,24 +26,6 @@
       "_city": "Mumbai",
       "_state": "Maharashtra",
       "_zip": "410141"
-    },
-    {
-      "_name": "Jayesh mali",
-      "_phoneNumber": "98 9632210341",
-      "_address": "konichiwa",
-      "_city": "Hyderabad",
-      "_state": "Lakshadweep",
-      "_zip": "410141",
-      "id": 4
-    },
-    {
-      "_name": "Jayesh mali",
-      "_phoneNumber": "90 9874563210",
-      "_address": "op",
-      "_city": "Surat",
-      "_state": "Himachal Pradesh",
-      "_zip": "410141",
-      "id": 5
     }
   ]
 }

@@ -78,9 +78,25 @@ function remove(node) {
     }
     const index = contactList.map(contact => contact.id).indexOf(removeContact.id)
     contactList.splice(index, 1); 
+    if (site_properties.use_local_storage.match("true")) {
     localStorage.setItem("ContactList",JSON.stringify(contactList))
     document.querySelector(".contact-count").textContent = contactList.length
     createInnerHtml();
+    }
+    else{
+      const deleteUrl = site_properties.server_url + removeContact.id.toString()
+      console.log(deleteUrl);
+      makePromiseCall("DELETE", deleteUrl, false)
+      .then(
+        (responseText) =>
+          createInnerHtml()
+      )
+      .catch(
+        (error) =>{
+            console.log("Delete Error Status: "+JSON.stringify(error));
+        }
+      );
+  }
 }
 
 function update(node) {
