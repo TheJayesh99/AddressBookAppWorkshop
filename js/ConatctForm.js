@@ -53,9 +53,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
 function save() {
   try {
     setContactObject()
-    createAndUpdateStorage()
-    resetForm()
-    window.location.replace("../pages/AddressBookHome.html")
+    if (site_properties.use_local_storage.match("true")) {
+      resetForm()
+        createAndUpdateStorage()
+        resetForm()
+        window.location.replace(site_properties.home_page)
+      } else {
+        createAndUpdateContactInServer()
+      }
   } catch (error) {
     alert(error);
   }
@@ -66,16 +71,35 @@ function createAndUpdateStorage() {
   if (contactList != undefined) {
     let contactData = contactList.find(contactData => contactData.id == contactObj.id)
     if(!contactData){
-      contactList.push(createContact())
+      contactList.push(contactObj)
     }else{
       const index = contactList.map(contactData => contactData.id).indexOf(contactData.id)
-      contactList.splice(index,1,createContact(contactData.id))
+      contactList.splice(index,1,contactObj)
     }
   } else {
-    contactList = [createContact()]
+    contactList = [contactObj]
   }
   localStorage.setItem("ContactList",JSON.stringify(contactList))
 }
+
+function createAndUpdateContactInServer() {
+  let postUrl = site_properties.server_url
+  let methodCall = "POST"
+  makePromiseCall(methodCall, postUrl, true, contactObj)
+  .then(
+    (responseText) =>
+    {
+      resetForm()
+      window.location.replace(site_properties.home_page)
+            }
+        )
+        .catch(
+          (error) =>{
+            throw error
+          }
+        );
+}
+
 
 function createContact(id) {
   let contact = new Contact()
@@ -174,9 +198,9 @@ function generateId() {
 }
 
 function setContactObject() {
-  // if () {
-    
-  // }
+  if (!isUpdate && site_properties.use_local_storage.match("true")) {
+    contactObj.id = generateId()
+  }
   try {
     contactObj._name = getInputValueById("#name");
   } catch (error) {
