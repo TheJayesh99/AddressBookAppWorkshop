@@ -85,6 +85,10 @@ function createAndUpdateStorage() {
 function createAndUpdateContactInServer() {
   let postUrl = site_properties.server_url
   let methodCall = "POST"
+  if(isUpdate){
+    methodCall = "PUT"
+    postUrl = postUrl + contactObj.id.toString()
+  }
   makePromiseCall(methodCall, postUrl, true, contactObj)
   .then(
     (responseText) =>
