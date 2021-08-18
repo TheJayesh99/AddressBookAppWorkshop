@@ -104,58 +104,6 @@ function createAndUpdateContactInServer() {
         );
 }
 
-
-function createContact(id) {
-  let contact = new Contact()
-    if (!id) {
-      contact.id = generateId()
-    }
-    else{
-      contact.id = id
-    }
-    setContactData(contact)
-    return contact
-}
-
-
-function setContactData(contact) {
-  try {
-    contact.name = getInputValueById("#name");
-  } catch (error) {
-    setTextValue(".name-error", error);
-    throw error;
-  }
-
-  try {
-    contact.phoneNumber = getInputValueById("#phoneNumber");
-  } catch (error) {
-    setTextValue(".tel-error", error);
-    throw error;
-  }
-  contact.address = getInputValueById("#address");
-  let city = getInputValueById("#city");
-  if (city != "Select City") {
-    contact.city = city;
-  } else {
-    throw "Please select city";
-  }
-  let state = getInputValueById("#state");
-  if (state != "Select State") {
-    contact.state = state;
-  } else {
-    throw "Please select state";
-  }
-
-  try {
-    contact.zip = getInputValueById("#zip");
-  } catch (error) {
-    setTextValue(".zip-error", error);
-    throw error;
-  }
-  console.log(contact.toString());
-  return contact
-}
-
 function getInputValueById(property) {
   let value = document.querySelector(property).value;
   return value;
@@ -206,6 +154,7 @@ function setContactObject() {
     contactObj.id = generateId()
   }
   try {
+    checkName(getInputValueById("#name"))
     contactObj._name = getInputValueById("#name");
   } catch (error) {
     setTextValue(".name-error", error);
@@ -213,22 +162,33 @@ function setContactObject() {
   }
 
   try {
+    checkNumber(getInputValueById("#phoneNumber"))
     contactObj._phoneNumber = getInputValueById("#phoneNumber");
   } catch (error) {
     setTextValue(".tel-error", error);
     throw error
   }
   contactObj._address = getInputValueById("#address");
-  contactObj._city = getInputValueById("#city");
-  contactObj._state = getInputValueById("#state");
+  let city = getInputValueById("#city");
+  if (city != "Select City") {
+    contactObj._city = city;
+  } else {
+    throw "Please select city";
+  }
+  let state = getInputValueById("#state");
+  if (state != "Select State") {
+    contactObj._state = state;
+  } else {
+    throw "Please select state";
+  }
   try {
+    checkZip(getInputValueById("#zip"))
     contactObj._zip = getInputValueById("#zip");
   } catch (error) {
     setTextValue(".zip-error", error);
     throw error
   }
 }
-
 
 function setTextValue(component,problem){
   let textError = document.querySelector(component);
